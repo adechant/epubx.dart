@@ -17,7 +17,14 @@ class ContentReader {
 
     bookRef.Schema!.Package!.Manifest!.Items!
         .forEach((EpubManifestItem manifestItem) {
-      var fileName = manifestItem.Href;
+      var fileName = manifestItem.Href!;
+
+      final oebps = 'OEBPS/';
+
+      if (fileName.toLowerCase().startsWith(oebps.toLowerCase())) {
+        fileName = fileName.substring(oebps.length);
+      }
+
       var contentMimeType = manifestItem.MediaType!;
       var contentType = getContentTypeByContentMimeType(contentMimeType);
       switch (contentType) {

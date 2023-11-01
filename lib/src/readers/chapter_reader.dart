@@ -16,10 +16,10 @@ class ChapterReader {
       EpubBookRef bookRef, List<EpubNavigationPoint> navigationPoints) {
     var result = <EpubChapterRef>[];
     // navigationPoints.forEach((EpubNavigationPoint navigationPoint) {
-    for (var navigationPoint in navigationPoints){
+    for (var navigationPoint in navigationPoints) {
       String? contentFileName;
       String? anchor;
-      if (navigationPoint.Content?.Source ==null) continue;
+      if (navigationPoint.Content?.Source == null) continue;
       var contentSourceAnchorCharIndex =
           navigationPoint.Content!.Source!.indexOf('#');
       if (contentSourceAnchorCharIndex == -1) {
@@ -34,8 +34,16 @@ class ChapterReader {
       contentFileName = Uri.decodeFull(contentFileName!);
       EpubTextContentFileRef? htmlContentFileRef;
       if (!bookRef.Content!.Html!.containsKey(contentFileName)) {
-        throw Exception(
-            'Incorrect EPUB manifest: item with href = \"$contentFileName\" is missing.');
+        if (contentFileName.toLowerCase().startsWith('oebps/')) {
+          contentFileName = contentFileName.substring('oebps/'.length);
+          if (!bookRef.Content!.Html!.containsKey(contentFileName)) {
+            throw Exception(
+                'Incorrect EPUB manifest: item with href = \"$contentFileName\" is missing.');
+          }
+        } else {
+          throw Exception(
+              'Incorrect EPUB manifest: item with href = \"$contentFileName\" is missing.');
+        }
       }
 
       htmlContentFileRef = bookRef.Content!.Html![contentFileName];
@@ -47,7 +55,8 @@ class ChapterReader {
           getChaptersImpl(bookRef, navigationPoint.ChildNavigationPoints!);
 
       result.add(chapterRef);
-    };
+    }
+    ;
     return result;
   }
 }
