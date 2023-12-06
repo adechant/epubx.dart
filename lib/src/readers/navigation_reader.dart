@@ -206,14 +206,6 @@ class NavigationReader {
       result.NavMap = navMap;
 
       //TODO : Implement pagesLists
-//      xml.XmlElement pageListNode = ncxNode
-//          .findElements("pageList", namespace: ncxNamespace)
-//          .firstWhere((xml.XmlElement elem) => elem != null,
-//          orElse: () => null);
-//      if (pageListNode != null) {
-//        EpubNavigationPageList pageList = readNavigationPageList(pageListNode);
-//        result.PageList = pageList;
-//      }
     }
 
     return result;
@@ -272,8 +264,9 @@ class NavigationReader {
   }
 
   static String extractContentPath(String _tocFileEntryPath, String ref) {
-    if (!_tocFileEntryPath.endsWith('/'))
+    if (!_tocFileEntryPath.endsWith('/')) {
       _tocFileEntryPath = _tocFileEntryPath + '/';
+    }
     var r = _tocFileEntryPath + ref;
     r = r.replaceAll('/\./', '/');
     r = r.replaceAll(RegExp(r'/[^/]+/\.\./'), '/');
@@ -289,7 +282,7 @@ class NavigationReader {
         .whereType<xml.XmlElement>()
         .forEach((xml.XmlElement textNode) {
       if (textNode.name.local.toLowerCase() == 'text') {
-        result.Authors!.add(textNode.text);
+        result.Authors!.add(textNode.value!);
       }
     });
     return result;
@@ -303,7 +296,7 @@ class NavigationReader {
         .whereType<xml.XmlElement>()
         .forEach((xml.XmlElement textNode) {
       if (textNode.name.local.toLowerCase() == 'text') {
-        result.Titles!.add(textNode.text);
+        result.Titles!.add(textNode.innerText);
       }
     });
     return result;
@@ -360,7 +353,7 @@ class NavigationReader {
           'Incorrect EPUB navigation label: label text element is missing.');
     }
 
-    result.Text = navigationLabelTextNode.text;
+    result.Text = navigationLabelTextNode.innerText;
 
     return result;
   }
@@ -368,7 +361,7 @@ class NavigationReader {
   static EpubNavigationLabel readNavigationLabelV3(
       xml.XmlElement navigationLabelNode) {
     var result = EpubNavigationLabel();
-    result.Text = navigationLabelNode.text.trim();
+    result.Text = navigationLabelNode.innerText.trim();
     return result;
   }
 

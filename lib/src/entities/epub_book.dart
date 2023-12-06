@@ -14,6 +14,7 @@ class EpubBook {
   EpubContent? Content;
   Image? CoverImage;
   List<EpubChapter>? Chapters;
+  int length = 0;
 
   @override
   int get hashCode {

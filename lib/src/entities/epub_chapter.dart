@@ -1,5 +1,6 @@
 import 'package:quiver/collection.dart' as collections;
 import 'package:quiver/core.dart';
+import 'dart:math';
 
 class EpubChapter {
   String? Title;
@@ -7,6 +8,12 @@ class EpubChapter {
   String? Anchor;
   String? HtmlContent;
   List<EpubChapter>? SubChapters;
+  int startPage = 0;
+  int endPage = 0;
+  int indexOfChapter = 0;
+
+  int pagesLeft(int index) => endPage - index;
+  int get length => max(endPage - startPage, 0);
 
   @override
   int get hashCode {
