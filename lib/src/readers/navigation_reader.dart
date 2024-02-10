@@ -55,6 +55,7 @@ class NavigationReader {
 
       _tocFileEntryPath =
           ZipPathUtils.combine(contentDirectoryPath, tocManifestItem.Href);
+
       var tocFileEntry = epubArchive.files.cast<ArchiveFile?>().firstWhere(
           (ArchiveFile? file) =>
               file!.name.toLowerCase() == _tocFileEntryPath!.toLowerCase(),

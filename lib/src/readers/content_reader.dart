@@ -41,7 +41,6 @@ class ContentReader {
             epubTextContentFile.ContentMimeType = contentMimeType;
             epubTextContentFile.ContentType = contentType;
           }
-          ;
           switch (contentType) {
             case EpubContentType.XHTML_1_1:
               result.Html![fileName] = epubTextContentFile;

@@ -65,8 +65,14 @@ class EpubReader {
     bookRef.Title = bookRef.Schema!.Package!.Metadata!.Titles!
         .firstWhere((String name) => true, orElse: () => '');
     bookRef.AuthorList = bookRef.Schema!.Package!.Metadata!.Creators!
-        .map((EpubMetadataCreator creator) => creator.Creator)
-        .toList();
+        .map((EpubMetadataCreator creator) {
+      if (creator.Creator != null) {
+        return creator.Creator;
+      } else if (creator.FileAs != null) {
+        return creator.FileAs!.split(',').join();
+      }
+      return null;
+    }).toList();
     bookRef.Author = bookRef.AuthorList!.join(', ');
     bookRef.Content = ContentReader.parseContentMap(bookRef);
     return bookRef;
@@ -87,6 +93,7 @@ class EpubReader {
     result.Title = epubBookRef.Title;
     result.AuthorList = epubBookRef.AuthorList;
     result.Author = epubBookRef.Author;
+    result.TOC = epubBookRef.flattenedTOC;
     result.Content = await readContent(epubBookRef.Content!);
     result.CoverImage = await epubBookRef.readCover();
     var chapterRefs = await epubBookRef.getChapters();
@@ -137,7 +144,7 @@ class EpubReader {
       textContentFile.FileName = value.FileName;
       textContentFile.ContentType = value.ContentType;
       textContentFile.ContentMimeType = value.ContentMimeType;
-      textContentFile.Content = await value.readContentAsText();
+      textContentFile.Content = value.readContentAsText();
       result[key] = textContentFile;
     });
     return result;
@@ -170,11 +177,11 @@ class EpubReader {
     await Future.forEach(chapterRefs, (EpubChapterRef chapterRef) async {
       var chapter = EpubChapter();
 
-      chapter.Title = chapterRef.Title;
+      //chapter.Title = chapterRef.Title;
       chapter.ContentFileName = chapterRef.ContentFileName;
-      chapter.Anchor = chapterRef.Anchor;
+      //chapter.Anchor = chapterRef.Anchor;
       chapter.HtmlContent = await chapterRef.readHtmlContent();
-      chapter.SubChapters = await readChapters(chapterRef.SubChapters!);
+      //chapter.SubChapters = await readChapters(chapterRef.SubChapters!);
 
       result.add(chapter);
     });

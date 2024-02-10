@@ -8,6 +8,7 @@ class EpubNavigationPoint {
   String? Id;
   String? Class;
   String? PlayOrder;
+  int nestLevel = 0;
   List<EpubNavigationLabel>? NavigationLabels;
   EpubNavigationContent? Content;
   List<EpubNavigationPoint>? ChildNavigationPoints;
@@ -47,6 +48,6 @@ class EpubNavigationPoint {
 
   @override
   String toString() {
-    return 'Id: $Id, Content.Source: ${Content!.Source}';
+    return '${NavigationLabels!.first.Text}';
   }
 }

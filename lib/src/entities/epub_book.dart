@@ -1,3 +1,4 @@
+import 'package:epubx/epubx.dart';
 import 'package:image/image.dart';
 import 'package:quiver/collection.dart' as collections;
 import 'package:quiver/core.dart';
@@ -15,6 +16,7 @@ class EpubBook {
   Image? CoverImage;
   List<EpubChapter>? Chapters;
   int length = 0;
+  List<EpubNavigationPoint> TOC = [];
 
   @override
   int get hashCode {

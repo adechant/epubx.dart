@@ -1,37 +1,52 @@
+import 'package:collection/collection.dart';
+
 import '../ref_entities/epub_book_ref.dart';
 import '../ref_entities/epub_chapter_ref.dart';
 import '../ref_entities/epub_text_content_file_ref.dart';
-import '../schema/navigation/epub_navigation_point.dart';
 
 class ChapterReader {
   static List<EpubChapterRef> getChapters(EpubBookRef bookRef) {
     if (bookRef.Schema!.Navigation == null) {
       return <EpubChapterRef>[];
     }
-    return getChaptersImpl(
-        bookRef, bookRef.Schema!.Navigation!.NavMap!.Points!);
+    return getChaptersImpl(bookRef);
   }
 
-  static List<EpubChapterRef> getChaptersImpl(
-      EpubBookRef bookRef, List<EpubNavigationPoint> navigationPoints) {
+  static List<EpubChapterRef> getChaptersImpl(EpubBookRef bookRef) {
     var result = <EpubChapterRef>[];
-    // navigationPoints.forEach((EpubNavigationPoint navigationPoint) {
-    for (var navigationPoint in navigationPoints) {
+
+    var spineItems = bookRef.Schema!.Package!.Spine!.Items;
+    var manifest = bookRef.Schema!.Package!.Manifest!.Items;
+
+    if (spineItems == null) {
+      throw Exception('Incorrect EPUB schema: spine is missing.');
+    }
+
+    if (manifest == null) {
+      throw Exception('Incorrect EPUB schema: manifest is missing.');
+    }
+
+    for (var spineItem in spineItems) {
       String? contentFileName;
-      String? anchor;
-      if (navigationPoint.Content?.Source == null) continue;
-      var contentSourceAnchorCharIndex =
-          navigationPoint.Content!.Source!.indexOf('#');
-      if (contentSourceAnchorCharIndex == -1) {
-        contentFileName = navigationPoint.Content!.Source;
-        anchor = null;
-      } else {
-        contentFileName = navigationPoint.Content!.Source!
-            .substring(0, contentSourceAnchorCharIndex);
-        anchor = navigationPoint.Content!.Source!
-            .substring(contentSourceAnchorCharIndex + 1);
+
+      if (spineItem.IdRef == null) {}
+
+      var manifestItem =
+          manifest.firstWhereOrNull((element) => element.Id == spineItem.IdRef);
+
+      if (manifestItem == null) {
+        throw Exception(
+            'Incorrect EPUB schema: spine item missing for Id:${spineItem.IdRef}.');
       }
-      contentFileName = Uri.decodeFull(contentFileName!);
+
+      contentFileName = manifestItem.Href;
+
+      if (contentFileName == null) {
+        throw Exception(
+            'Incorrect EPUB manifest: manifest entry missing for Id:${spineItem.IdRef}.');
+      }
+
+      contentFileName = Uri.decodeFull(contentFileName);
       EpubTextContentFileRef? htmlContentFileRef;
       if (!bookRef.Content!.Html!.containsKey(contentFileName)) {
         if (contentFileName.toLowerCase().startsWith('oebps/')) {
@@ -49,14 +64,9 @@ class ChapterReader {
       htmlContentFileRef = bookRef.Content!.Html![contentFileName];
       var chapterRef = EpubChapterRef(htmlContentFileRef);
       chapterRef.ContentFileName = contentFileName;
-      chapterRef.Anchor = anchor;
-      chapterRef.Title = navigationPoint.NavigationLabels!.first.Text;
-      chapterRef.SubChapters =
-          getChaptersImpl(bookRef, navigationPoint.ChildNavigationPoints!);
 
       result.add(chapterRef);
     }
-    ;
     return result;
   }
 }
