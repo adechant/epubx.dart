@@ -34,8 +34,13 @@ class BookCoverReader {
 
     EpubByteContentFileRef? coverImageContentFileRef;
     if (!bookRef.Content!.Images!.containsKey(coverManifestItem.Href)) {
-      throw Exception(
-          'Incorrect EPUB manifest: item with href = \"${coverManifestItem.Href}\" is missing.');
+      if (coverManifestItem.Href!.toLowerCase().startsWith('oebps/')) {
+        coverManifestItem.Href = coverManifestItem.Href!.substring(6);
+        if (!bookRef.Content!.Images!.containsKey(coverManifestItem.Href)) {
+          throw Exception(
+              'Incorrect EPUB manifest: item with href = \"${coverManifestItem.Href}\" is missing.');
+        }
+      }
     }
 
     coverImageContentFileRef = bookRef.Content!.Images![coverManifestItem.Href];

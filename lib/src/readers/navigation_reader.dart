@@ -283,7 +283,7 @@ class NavigationReader {
         .whereType<xml.XmlElement>()
         .forEach((xml.XmlElement textNode) {
       if (textNode.name.local.toLowerCase() == 'text') {
-        result.Authors!.add(textNode.value!);
+        result.Authors!.add(textNode.value ?? textNode.innerText ?? '');
       }
     });
     return result;
