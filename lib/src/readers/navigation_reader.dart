@@ -167,6 +167,8 @@ class NavigationReader {
           contentDirectoryPath.isEmpty) {
         _tocFileEntryPath =
             ((_tocFileEntryPath!.split('/')..removeLast())).join('/') + '/';
+      } else if (!_tocFileEntryPath!.contains('/')) {
+        _tocFileEntryPath = '';
       } else {
         _tocFileEntryPath = ((_tocFileEntryPath!.split('/')..removeLast())
                   ..removeAt(0))
