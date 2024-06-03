@@ -47,8 +47,14 @@ abstract class EpubContentFileRef {
           .files
           .firstWhereOrNull((ArchiveFile x) => x.name == contentFilePath);
       if (contentFileEntry == null) {
-        throw Exception(
-            'EPUB parsing error: file $contentFilePath not found in archive.');
+        contentFilePath = ZipPathUtils.combine('OEBPS', contentFilePath);
+        contentFileEntry = epubBookRef.EpubArchive()!
+            .files
+            .firstWhereOrNull((ArchiveFile x) => x.name == contentFilePath);
+        if (contentFileEntry == null) {
+          throw Exception(
+              'EPUB parsing error: file $contentFilePath not found in archive.');
+        }
       }
     }
     return contentFileEntry;
