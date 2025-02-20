@@ -29,7 +29,7 @@ class BookCoverReader {
             coverMetaItem.Content!.toLowerCase());
     if (coverManifestItem == null) {
       throw Exception(
-          'Incorrect EPUB manifest: item with ID = \"${coverMetaItem.Content}\" is missing.');
+          'Incorrect EPUB manifest: item with ID = "${coverMetaItem.Content}" is missing.');
     }
 
     EpubByteContentFileRef? coverImageContentFileRef;
@@ -38,7 +38,7 @@ class BookCoverReader {
         coverManifestItem.Href = coverManifestItem.Href!.substring(6);
         if (!bookRef.Content!.Images!.containsKey(coverManifestItem.Href)) {
           throw Exception(
-              'Incorrect EPUB manifest: item with href = \"${coverManifestItem.Href}\" is missing.');
+              'Incorrect EPUB manifest: item with href = "${coverManifestItem.Href}" is missing.');
         }
       }
     }

@@ -29,22 +29,26 @@ class EpubNavigationWriter {
   static void writeNavigationDocTitle(
       XmlBuilder builder, EpubNavigationDocTitle title) {
     builder.element('docTitle', nest: () {
-      title.Titles!.forEach((element) {
+      for (var element in title.Titles!) {
         builder.text(element);
-      });
+      }
     });
   }
 
   static void writeNavigationHead(XmlBuilder builder, EpubNavigationHead head) {
     builder.element('head', nest: () {
-      head.Metadata!.forEach((item) => builder.element('meta',
-          attributes: {'content': item.Content!, 'name': item.Name!}));
+      for (var item in head.Metadata!) {
+        builder.element('meta',
+          attributes: {'content': item.Content!, 'name': item.Name!});
+      }
     });
   }
 
   static void writeNavigationMap(XmlBuilder builder, EpubNavigationMap map) {
     builder.element('navMap', nest: () {
-      map.Points!.forEach((item) => writeNavigationPoint(builder, item));
+      for (var item in map.Points!) {
+        writeNavigationPoint(builder, item);
+      }
     });
   }
 
@@ -54,13 +58,13 @@ class EpubNavigationWriter {
       'id': point.Id!,
       'playOrder': point.PlayOrder!,
     }, nest: () {
-      point.NavigationLabels!.forEach((element) {
+      for (var element in point.NavigationLabels!) {
         builder.element('navLabel', nest: () {
           builder.element('text', nest: () {
             builder.text(element.Text!);
           });
         });
-      });
+      }
       builder.element('content', attributes: {'src': point.Content!.Source!});
     });
   }

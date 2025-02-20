@@ -1,11 +1,7 @@
 import 'package:epubx/epubx.dart';
-import 'package:image/image.dart';
 import 'package:quiver/collection.dart' as collections;
 import 'package:quiver/core.dart';
 
-import 'epub_chapter.dart';
-import 'epub_content.dart';
-import 'epub_schema.dart';
 
 class EpubBook {
   String? Title;
@@ -34,7 +30,7 @@ class EpubBook {
 
   @override
   bool operator ==(other) {
-    if (!(other is EpubBook)) {
+    if (other is! EpubBook) {
       return false;
     }
 

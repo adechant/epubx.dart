@@ -53,11 +53,11 @@ class ChapterReader {
           contentFileName = contentFileName.substring('oebps/'.length);
           if (!bookRef.Content!.Html!.containsKey(contentFileName)) {
             throw Exception(
-                'Incorrect EPUB manifest: item with href = \"$contentFileName\" is missing.');
+                'Incorrect EPUB manifest: item with href = "$contentFileName" is missing.');
           }
         } else {
           throw Exception(
-              'Incorrect EPUB manifest: item with href = \"$contentFileName\" is missing.');
+              'Incorrect EPUB manifest: item with href = "$contentFileName" is missing.');
         }
       }
 

@@ -4,7 +4,6 @@ import '../ref_entities/epub_byte_content_file_ref.dart';
 import '../ref_entities/epub_content_file_ref.dart';
 import '../ref_entities/epub_content_ref.dart';
 import '../ref_entities/epub_text_content_file_ref.dart';
-import '../schema/opf/epub_manifest_item.dart';
 
 class ContentReader {
   static EpubContentRef parseContentMap(EpubBookRef bookRef) {
@@ -15,8 +14,7 @@ class ContentReader {
     result.Fonts = <String, EpubByteContentFileRef>{};
     result.AllFiles = <String, EpubContentFileRef>{};
 
-    bookRef.Schema!.Package!.Manifest!.Items!
-        .forEach((EpubManifestItem manifestItem) {
+    for (var manifestItem in bookRef.Schema!.Package!.Manifest!.Items!) {
       var fileName = manifestItem.Href!;
 
       final oebps = 'OEBPS/';
@@ -71,8 +69,7 @@ class ContentReader {
             epubByteContentFile.FileName = Uri.decodeFull(fileName);
             epubByteContentFile.ContentMimeType = contentMimeType;
             epubByteContentFile.ContentType = contentType;
-          }
-          ;
+          } {}
           switch (contentType) {
             case EpubContentType.IMAGE_GIF:
             case EpubContentType.IMAGE_JPEG:
@@ -98,7 +95,7 @@ class ContentReader {
           result.AllFiles![fileName] = epubByteContentFile;
           break;
       }
-    });
+    }
     return result;
   }
 
