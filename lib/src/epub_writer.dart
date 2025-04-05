@@ -16,9 +16,11 @@ class EpubWriter {
     var arch = Archive();
 
     // Add simple metadata
-    arch.addFile(ArchiveFile.file('mimetype', 20,
-        FileContentMemory(convert.utf8.encode('application/epub+zip')),
-        compression: CompressionType.none));
+    arch.addFile(ArchiveFile.file(
+      'mimetype',
+      20,
+      FileContentMemory(convert.utf8.encode('application/epub+zip')),
+    ));
 
     // Add Container file
     arch.addFile(ArchiveFile('META-INF/container.xml', _container_file.length,
