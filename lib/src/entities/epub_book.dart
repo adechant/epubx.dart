@@ -2,6 +2,7 @@ import 'package:epubx/epubx.dart';
 import 'package:quiver/collection.dart' as collections;
 import 'package:quiver/core.dart';
 
+
 class EpubBook {
   String? Title;
   String? Author;
@@ -38,9 +39,8 @@ class EpubBook {
         collections.listsEqual(AuthorList, other.AuthorList) &&
         Schema == other.Schema &&
         Content == other.Content &&
-        ((CoverImage == null && other.CoverImage == null) ||
-            (collections.listsEqual(
-                CoverImage!.getBytes(), other.CoverImage!.getBytes()))) &&
+        collections.listsEqual(
+            CoverImage!.getBytes(), other.CoverImage!.getBytes()) &&
         collections.listsEqual(Chapters, other.Chapters);
   }
 }
