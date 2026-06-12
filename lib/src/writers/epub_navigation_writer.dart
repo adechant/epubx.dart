@@ -3,7 +3,7 @@ import 'package:epubx/src/schema/navigation/epub_navigation_doc_title.dart';
 import 'package:epubx/src/schema/navigation/epub_navigation_head.dart';
 import 'package:epubx/src/schema/navigation/epub_navigation_map.dart';
 import 'package:epubx/src/schema/navigation/epub_navigation_point.dart';
-import 'package:xml/src/xml/builder.dart' show XmlBuilder;
+import 'package:xml/xml.dart' show XmlBuilder;
 
 class EpubNavigationWriter {
   static const String _namespace = 'http://www.daisy.org/z3986/2005/ncx/';
@@ -39,7 +39,7 @@ class EpubNavigationWriter {
     builder.element('head', nest: () {
       for (var item in head.Metadata!) {
         builder.element('meta',
-          attributes: {'content': item.Content!, 'name': item.Name!});
+            attributes: {'content': item.Content!, 'name': item.Name!});
       }
     });
   }
